@@ -1,0 +1,103 @@
+<style>
+
+    * { margin: 10px auto 10px auto; }
+
+    #password-checker {
+        display: block;
+        font-size: 24pt;
+    }
+
+    #grade, #special-character-warning {
+        display: none;
+        text-align: center;
+    }
+
+    #grade {
+        font-size: 24pt;
+    }
+
+    #special-character-warning {
+        font-size: 10pt;
+        font-style: italic;
+    }
+
+    #report-card  {
+        padding: 10px;
+        font-size: 14pt;
+        text-align: center;
+    }
+
+    #report-card td { padding: 2px 7px; }
+
+</style>
+
+<script>
+
+    const atLeastTwelveCharacters = /.{12,}/;
+    const atLeastOneDigit = /(?=.*\d).*/;
+    const mixedCases = /(?=.*[A-Z])(?=.*[a-z]).*/;
+    const specialCharacter = /(?=.*[!@#$%&*]).*/;
+    const noCarats = /(?!.*[<>]).*/;
+    const validPassword = /(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?!.*[<>]).{12,}/
+
+    document.addEventListener( "DOMContentLoaded", () => {
+        document.getElementById( "password-checker" ).addEventListener( "change", ( { target } ) => {
+            const [ hasAtLeastTwelveCharacters, hasOneDigit, hasMixedCases, hasSpecialCharacter, hasNoCarats, passwordIsStrongEnough ] = [
+                !!target.value.match( atLeastTwelveCharacters ),
+                !!target.value.match( atLeastOneDigit ),
+                !!target.value.match( mixedCases ),
+                !!target.value.match( specialCharacter ),
+                !!target.value.match( noCarats ),
+                !!target.value.match( validPassword )
+            ];
+            document.querySelector( 'tr[name="twelve-characters"]' ).style.backgroundColor = hasAtLeastTwelveCharacters ? "#9e9" : "#fcc";
+            document.querySelector( 'tr[name="twelve-characters"] td' ).innerHTML = hasAtLeastTwelveCharacters ? "✓" : "✗";
+            document.querySelector( 'tr[name="one-digit"]' ).style.backgroundColor = hasOneDigit ? "#9e9" : "#fcc";
+            document.querySelector( 'tr[name="one-digit"] td' ).innerHTML = hasOneDigit ? "✓" : "✗";
+            document.querySelector( 'tr[name="both-cases"]' ).style.backgroundColor = hasMixedCases ? "#9e9" : "#fcc";
+            document.querySelector( 'tr[name="both-cases"] td' ).innerHTML = hasMixedCases ? "✓" : "✗";
+            document.querySelector( 'tr[name="special-character"]' ).style.backgroundColor = hasSpecialCharacter ? "#9e9" : "#ffc";
+            document.querySelector( 'tr[name="special-character"] td' ).innerHTML = hasSpecialCharacter ? "✓" : "✗";
+            document.querySelector( 'tr[name="no-carats"]' ).style.backgroundColor = hasNoCarats ? "#9e9" : "#fcc";
+            document.querySelector( 'tr[name="no-carats"] td' ).innerHTML = hasNoCarats ? "✓" : "✗";
+            if ( !!target.value ) {
+                document.getElementById( 'grade' ).style.display = "block";
+                document.getElementById( 'grade' ).innerHTML = passwordIsStrongEnough ? ( specialCharacter ? "✓ PASS" : "⚠ PASS" ) : "✗ FAIL";
+                document.getElementById( 'special-character-warning' ).style.display = "block";
+                document.getElementById( 'special-character-warning' ).innerHTML = passwordIsStrongEnough ? ( hasSpecialCharacter ? "This is a good password!" : "This is a decent password. Add a special character to make it even more secure." ) : "This password is not secure. Follow the instructions until your password passes all the tests.";
+            } else {
+                document.getElementById( 'grade' ).style.display = "none";
+                document.getElementById( 'special-character-warning' ).style.display = "none";
+            }
+        } );
+    } );
+
+</script>
+
+<input id="password-checker" placeholder="Enter a password" />
+
+<table id="report-card">
+    <tr name="twelve-characters" style="background-color: #fcc;">
+        <td>✗</td>
+        <td>At least twelve characters long</td>
+    </tr>
+    <tr name="one-digit" style="background-color: #fcc;">
+        <td>✗</td>
+        <td>At least one digit (0-9)</td>
+    </tr>
+    <tr name="both-cases" style="background-color: #fcc;">
+        <td>✗</td>
+        <td>Both uppercase and lowercase characters</td>
+    </tr>
+    <tr name="special-character" style="background-color: #ffc;">
+        <td>✗</td>
+        <td>At least one of the following: <code>!@#$%&*</code></td>
+    </tr>
+    <tr name="no-carats" style="background-color: #9e9;">
+        <td>✗</td>
+        <td>No carats: <code><></code></td>
+    </tr>
+</table>
+
+<div id="grade"></div>
+<div id="special-character-warning"></div>

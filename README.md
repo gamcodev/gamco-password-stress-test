@@ -1,6 +1,6 @@
 # gamco-password-stress-test
 
-A simple front-end password stress test with regex in pure JavaScript.
+A simple front-end password stress test for GAMCO using the [Dropbox zxcvbn algorithm](https://github.com/dropbox/zxcvbn). 
 
 ## Da rules
 - At least 12 characters
